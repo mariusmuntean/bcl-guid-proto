@@ -1,5 +1,5 @@
-import {toBclGuidProto} from '../index'
+import { toBclGuidProto } from '../index';
 
-test("1", () => {
-    expect(toBclGuidProto("hi")).toBe("hi")
-})
+test('1', () => {
+  expect(toBclGuidProto('hi')).toBe('hi');
+});
