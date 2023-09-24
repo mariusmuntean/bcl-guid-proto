@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using ProtoBuf;
@@ -39,7 +40,10 @@ public class DtoController : ControllerBase
     [HttpPut("/dto")]
     public async Task Put()
     {
-        var receivedDto = Serializer.Deserialize<Dto>(Request.Body);
+        using var ms = new MemoryStream();
+        await Request.Body.CopyToAsync(ms);
+        ms.Seek(0, SeekOrigin.Begin);
+        var receivedDto = Serializer.Deserialize<Dto>(ms);
         _logger.LogInformation("Received: {ReceivedDtoJson}", JsonSerializer.Serialize(receivedDto));
 
         var responseDto = new Dto {Id = receivedDto.Id};
