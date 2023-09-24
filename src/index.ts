@@ -1,4 +1,3 @@
-export const toBclGuidProto = (guid:string): any => {
-
-    return guid
-}
+export const toBclGuidProto = (guid: string): any => {
+  return guid;
+};
