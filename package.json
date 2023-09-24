@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariusmuntean/bcl-guid-proto.git"
+  },
   "keywords": [
     "GUID",
     "protobuf-net",
@@ -13,5 +17,8 @@
     "interop"
   ],
   "author": "Marius Muntean",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mariusmuntean/bcl-guid-proto/issues"
+  }
 }
