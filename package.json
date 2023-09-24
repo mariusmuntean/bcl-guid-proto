@@ -4,6 +4,7 @@
   "description": "Converts GUIDs to and from protobut-net's representation.",
   "main": "index.js",
   "scripts": {
+    "build":"tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,8 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mariusmuntean/bcl-guid-proto/issues"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
