@@ -1,6 +1,6 @@
 {
   "name": "bcl-guid-proto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts GUIDs to and from protobut-net's representation.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,7 +12,7 @@
     "test": "jest --config jestconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
-    "version": "npm run format && git add -A src",
+    "version": "git add -A src",
     "postversion": "git push && git push --tags"
   },
   "repository": {
