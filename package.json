@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Converts GUIDs to and from protobut-net's representation.",
   "main": "index.js",
+  "files": ["lib/**/*"],
   "scripts": {
     "build":"tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
