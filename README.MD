@@ -1,5 +1,7 @@
 # BCL GUID Proto
 
+[![npm](https://img.shields.io/npm/v/bcl-guid-proto)](https://www.npmjs.com/package/bcl-guid-proto)
+
 A helper library that allows exchanging Protobuf-serialized GUIDs between a Node application and a .NET application that uses Protobuf-net.
 
 ## What is even the problem?
