@@ -70,8 +70,8 @@ export const toProtobufNetGuid = (guid: string): ProtobufNetGuid => {
   const doubleWord4 = reassembledGuid.slice(24, 32);
 
   return {
-    lo: new Long(Number.parseInt(doubleWord1, 16), Number.parseInt(doubleWord2, 16)),
-    hi: new Long(Number.parseInt(doubleWord3, 16), Number.parseInt(doubleWord4, 16)),
+    lo: new Long(Number.parseInt(doubleWord1, 16), Number.parseInt(doubleWord2, 16), true),
+    hi: new Long(Number.parseInt(doubleWord3, 16), Number.parseInt(doubleWord4, 16), true),
   };
 };
 

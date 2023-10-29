@@ -1,8 +1,10 @@
 import { load } from 'protobufjs';
 import path from 'path';
 import Long from 'long';
+import { execSync } from 'child_process';
 
 import { fromProtobufNetGuid, toProtobufNetGuid } from '../index';
+import { Dto } from './Dto';
 
 test('Dummy GUID serialized correctly', async () => {
   const guid = toProtobufNetGuid('00112233-4455-6677-8899-AABBCCDDEEFF');
@@ -57,4 +59,35 @@ test('Input Validation', () => {
   ).toThrow();
 
   // Add more input validation tests here...
+});
+
+test('Roundtrip to .NET app and back', async () => {
+  // Given that I have a DTO with a GUID field that is protobuf serialized and converted to a base64 string
+  const expectedGuid = '00112233-4455-6677-8899-AABBCCDDEEFF';
+  const dto: Dto = {
+    Id: toProtobufNetGuid(expectedGuid),
+  };
+
+  const root = await load(path.join(__dirname, 'types.proto'));
+
+  const dtoMessageType = root.lookupType('Dto');
+
+  const errorMsg = dtoMessageType.verify(dto);
+  expect(errorMsg).toBeNull();
+
+  const dtoMessage = dtoMessageType.create(dto);
+  const dtoMessageUint8Array = dtoMessageType.encode(dtoMessage).finish();
+
+  const base64String = Buffer.from(dtoMessageUint8Array).toString('base64');
+
+  // When I send it to a .NET CLI tool which deserializes and then serializes the DTO back
+  const command = `dotnet run --force --project ./src/__tests__/tester/Tester.CLI/Tester.CLI.csproj --byteArray ${base64String}`;
+  const stdOut = execSync(command).toString();
+
+  // Then the returned data can be deserialized and the GUID recovered
+  const decodedDto = dtoMessageType.decode(Buffer.from(stdOut, 'base64')) as unknown as Dto;
+  expect(decodedDto).not.toBeFalsy();
+  const decodedGuid = fromProtobufNetGuid(decodedDto.Id);
+  expect(decodedGuid).not.toBeNull();
+  expect(decodedGuid).toEqual(expectedGuid);
 });
