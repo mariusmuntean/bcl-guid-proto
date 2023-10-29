@@ -1,10 +1,10 @@
-import { toBclGuidProto } from '../index';
 import { load } from 'protobufjs';
-import { request } from 'http';
 import path from 'path';
 
+import { fromProtobufNetGuid, toProtobufNetGuid } from '../index';
+
 test('Dummy GUID serialized correctly', async () => {
-  const guid = toBclGuidProto('00112233-4455-6677-8899-AABBCCDDEEFF');
+  const guid = toProtobufNetGuid('00112233-4455-6677-8899-AABBCCDDEEFF');
 
   // Obtain the root
   const root = await load(path.join(__dirname, 'types.proto'));
@@ -28,44 +28,12 @@ test('Dummy GUID serialized correctly', async () => {
 });
 
 /**
- * Make sure to have the ASP.NETCore project running
+ * Integration test that converts a string GUID to ProtobufNetGuid and then recovers it.
  */
-test('Sent Dto is the same as the received one', async () => {
-  const dto = {
-    Id: toBclGuidProto('00112233-4455-6677-8899-AABBCCDDEEFF'),
-  };
+test('To and from ProtobufNetGuid', async () => {
+  const expectedGuid = '00112233-4455-6677-8899-AABBCCDDEEFF';
+  const protobufNetGuid = toProtobufNetGuid(expectedGuid);
+  const recoveredGuid = fromProtobufNetGuid(protobufNetGuid);
 
-  // Obtain the root
-  const root = await load(path.join(__dirname, 'types.proto'));
-
-  // Load Dto message
-  const dtoMessageType = root.lookupType('Dto');
-
-  // The protobufable GUID should match the schema
-  const errorMsg = dtoMessageType.verify(dto);
-  expect(errorMsg).toBeNull();
-
-  // Create a dto message instance and serialize it
-  const dtoMessage = dtoMessageType.create(dto);
-  const dtoMessageUint8Array = dtoMessageType.encode(dtoMessage).finish();
-
-  // Send to the AP.NET Core app
-  const req = request({
-    origin: ' http://localhost',
-    port: '5069',
-    path: '/dto',
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/protobuf',
-      'Content-length': dtoMessageUint8Array.length,
-    },
-  });
-
-  req.on('error', (e) => {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, no-console
-    console.error(`Request failed: ${e}`);
-  });
-  req.write(Buffer.from(dtoMessageUint8Array));
-
-  req.end();
+  expect(recoveredGuid).toEqual<string>(expectedGuid);
 });

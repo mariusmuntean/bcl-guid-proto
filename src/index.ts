@@ -1,6 +1,6 @@
 import Long from 'long';
 
-export interface Guid {
+export interface ProtobufNetGuid {
   lo: Long;
   hi: Long;
 }
@@ -10,7 +10,7 @@ export interface Guid {
  * @param guid A GUID string, e.g. '0CBFD489-DDFA-4E4B-B096-58133E61F15F'
  * @returns A Guid instance that can be protobuf-serialized with protobufjs
  */
-export const toBclGuidProto = (guid: string): Guid => {
+export const toProtobufNetGuid = (guid: string): ProtobufNetGuid => {
   // ToDo: input validation
 
   // no hyphens
@@ -71,6 +71,52 @@ export const toBclGuidProto = (guid: string): Guid => {
     lo: new Long(Number.parseInt(doubleWord1, 16), Number.parseInt(doubleWord2, 16)),
     hi: new Long(Number.parseInt(doubleWord3, 16), Number.parseInt(doubleWord4, 16)),
   };
+};
+
+/**
+ * Takes a GUID string and produces a Guid instance that can be serialized properly by protobufjs in a way that protobuf-net will understand it as a .NET Guid.
+ * @param guid A GUID string, e.g. '0CBFD489-DDFA-4E4B-B096-58133E61F15F'
+ * @returns A Guid instance that can be protobuf-serialized with protobufjs
+ */
+export const fromProtobufNetGuid = (protobufNetGuid: ProtobufNetGuid): string => {
+  // ToDo: input validation
+
+  const { lo, hi } = protobufNetGuid;
+  const loBytes = lo.toBytes();
+  const doubleWord1 = loBytes.slice(4, 8);
+  const doubleWord2 = loBytes.slice(0, 4);
+
+  const hiBytes = hi.toBytes();
+  const doubleWord3 = hiBytes.slice(4, 8);
+  const doubleWord4 = hiBytes.slice(0, 4);
+
+  const crazyEndianGuid = [...doubleWord1, ...doubleWord2, ...doubleWord3, ...doubleWord4];
+
+  const b0 = crazyEndianGuid[0].toString(16).toUpperCase().padStart(2, '0');
+  const b1 = crazyEndianGuid[1].toString(16).toUpperCase().padStart(2, '0');
+  const b2 = crazyEndianGuid[2].toString(16).toUpperCase().padStart(2, '0');
+  const b3 = crazyEndianGuid[3].toString(16).toUpperCase().padStart(2, '0');
+
+  const b4 = crazyEndianGuid[6].toString(16).toUpperCase().padStart(2, '0');
+  const b5 = crazyEndianGuid[7].toString(16).toUpperCase().padStart(2, '0');
+
+  const b6 = crazyEndianGuid[4].toString(16).toUpperCase().padStart(2, '0');
+  const b7 = crazyEndianGuid[5].toString(16).toUpperCase().padStart(2, '0');
+
+  const b8 = crazyEndianGuid[11].toString(16).toUpperCase().padStart(2, '0');
+  const b9 = crazyEndianGuid[10].toString(16).toUpperCase().padStart(2, '0');
+
+  const b10 = crazyEndianGuid[9].toString(16).toUpperCase().padStart(2, '0');
+  const b11 = crazyEndianGuid[8].toString(16).toUpperCase().padStart(2, '0');
+  const b12 = crazyEndianGuid[15].toString(16).toUpperCase().padStart(2, '0');
+  const b13 = crazyEndianGuid[14].toString(16).toUpperCase().padStart(2, '0');
+  const b14 = crazyEndianGuid[13].toString(16).toUpperCase().padStart(2, '0');
+  const b15 = crazyEndianGuid[12].toString(16).toUpperCase().padStart(2, '0');
+
+  const crazyEndianGuidString = [b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15].join('');
+
+  const recoveredGuid = `${crazyEndianGuidString.slice(0, 8)}-${crazyEndianGuidString.slice(8, 12)}-${crazyEndianGuidString.slice(12, 16)}-${crazyEndianGuidString.slice(16, 20)}-${crazyEndianGuidString.slice(20, 32)}`;
+  return recoveredGuid;
 };
 
 // ToDo: add roundtrip tst
