@@ -9,18 +9,18 @@ test('Dummy GUID serialized correctly', async () => {
   // Obtain the root
   const root = await load(path.join(__dirname, 'types.proto'));
 
-  // Load GUID message
+  // Load GUID message type
   const guidMessageType = root.lookupType('Guid');
 
   // The protobufable GUID should match the schema
   const errorMsg = guidMessageType.verify(guid);
   expect(errorMsg).toBeNull();
 
-  // Create a dto message instance and serialize it
+  // Create a GUID protobuf message instance and serialize it
   const guidMessage = guidMessageType.create(guid);
   const guidMessageUint8Array = guidMessageType.encode(guidMessage).finish();
 
-  // The first 8 bytes have the field header '09' and the rest 8 bytes have the field header '11'
+  // The first 8 bytes have the field header '09' and the remaining 8 bytes have the field header '11'
   const hexMessage = Array.from(guidMessageUint8Array)
     .map((byte) => byte.toString(16).padStart(2, '0'))
     .join('');
