@@ -4,7 +4,10 @@ import Long from 'long';
 import { execSync } from 'child_process';
 
 import { ProtobufNetGuid, fromProtobufNetGuid, toProtobufNetGuid } from '../index';
-import { Dto } from './Dto';
+
+export interface Dto {
+  Id: ProtobufNetGuid;
+}
 
 test('Dummy GUID serialized correctly', async () => {
   const guid = toProtobufNetGuid('00112233-4455-6677-8899-AABBCCDDEEFF');
