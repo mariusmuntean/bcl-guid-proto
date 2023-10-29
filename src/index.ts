@@ -11,7 +11,9 @@ export interface ProtobufNetGuid {
  * @returns A Guid instance that can be protobuf-serialized with protobufjs
  */
 export const toProtobufNetGuid = (guid: string): ProtobufNetGuid => {
-  // ToDo: input validation
+  if (!guid?.length) {
+    throw new Error('Passed in GUID string is null or empty');
+  }
 
   // no hyphens
   const guidNoHyphens = guid.replace(/-/g, '');
@@ -75,11 +77,13 @@ export const toProtobufNetGuid = (guid: string): ProtobufNetGuid => {
 
 /**
  * Takes a GUID string and produces a Guid instance that can be serialized properly by protobufjs in a way that protobuf-net will understand it as a .NET Guid.
- * @param guid A GUID string, e.g. '0CBFD489-DDFA-4E4B-B096-58133E61F15F'
- * @returns A Guid instance that can be protobuf-serialized with protobufjs
+ * @param protobufNetGuid An instance containing a .NET GUID serialized with protobuf-net
+ * @returns The recovered GUID string, e.g. '0CBFD489-DDFA-4E4B-B096-58133E61F15F'
  */
 export const fromProtobufNetGuid = (protobufNetGuid: ProtobufNetGuid): string => {
-  // ToDo: input validation
+  if (!protobufNetGuid?.lo || !protobufNetGuid?.hi) {
+    throw new Error('The ProtobufNetGuid instance is null or incomplete');
+  }
 
   const { lo, hi } = protobufNetGuid;
   const loBytes = lo.toBytes();
@@ -118,6 +122,3 @@ export const fromProtobufNetGuid = (protobufNetGuid: ProtobufNetGuid): string =>
   const recoveredGuid = `${crazyEndianGuidString.slice(0, 8)}-${crazyEndianGuidString.slice(8, 12)}-${crazyEndianGuidString.slice(12, 16)}-${crazyEndianGuidString.slice(16, 20)}-${crazyEndianGuidString.slice(20, 32)}`;
   return recoveredGuid;
 };
-
-// ToDo: add roundtrip tst
-// ToDo: expose raw bytes to allow other libraries to send the Guid
