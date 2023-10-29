@@ -7,6 +7,6 @@
     "outDir": "./lib",
     "strict": true /* Enable all strict type-checking options. */
   },
-  "include": ["./src/*", "src/__tests__/"],
+  "include": ["./src/*", "!./src/__tests__/"],
   "exclude": ["./node_modules"]
 }
