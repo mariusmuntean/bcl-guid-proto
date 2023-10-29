@@ -3,7 +3,7 @@ import path from 'path';
 import Long from 'long';
 import { execSync } from 'child_process';
 
-import { fromProtobufNetGuid, toProtobufNetGuid } from '../index';
+import { ProtobufNetGuid, fromProtobufNetGuid, toProtobufNetGuid } from '../index';
 import { Dto } from './Dto';
 
 test('Dummy GUID serialized correctly', async () => {
@@ -36,8 +36,8 @@ test('Dummy GUID serialized correctly', async () => {
 test.each(['00000000-0000-0000-0000-000000000000', '00112233-4455-6677-8899-AABBCCDDEEFF', '3F2504E0-4F89-11D3-9A0C-0305E82C3301', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'])(
   'To and from ProtobufNetGuid with %s',
   (expectedGuid) => {
-    const protobufNetGuid = toProtobufNetGuid(expectedGuid);
-    const recoveredGuid = fromProtobufNetGuid(protobufNetGuid);
+    const protobufNetGuid: ProtobufNetGuid = toProtobufNetGuid(expectedGuid);
+    const recoveredGuid: string = fromProtobufNetGuid(protobufNetGuid);
 
     expect(recoveredGuid).toEqual<string>(expectedGuid);
   },

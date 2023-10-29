@@ -1,6 +1,6 @@
 {
   "name": "bcl-guid-proto",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Converts GUIDs to and from protobut-net's representation.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
