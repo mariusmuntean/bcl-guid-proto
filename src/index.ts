@@ -5,7 +5,14 @@ export interface Guid {
   hi: Long;
 }
 
+/**
+ * Takes a GUID string and produces a Guid instance that can be serialized properly by protobufjs in a way that protobuf-net will understand it as a .NET Guid.
+ * @param guid A GUID string, e.g. '0CBFD489-DDFA-4E4B-B096-58133E61F15F'
+ * @returns A Guid instance that can be protobuf-serialized with protobufjs
+ */
 export const toBclGuidProto = (guid: string): Guid => {
+  // ToDo: input validation
+
   // no hyphens
   const guidNoHyphens = guid.replace(/-/g, '');
 
@@ -65,3 +72,6 @@ export const toBclGuidProto = (guid: string): Guid => {
     hi: new Long(Number.parseInt(doubleWord3, 16), Number.parseInt(doubleWord4, 16)),
   };
 };
+
+// ToDo: add roundtrip tst
+// ToDo: expose raw bytes to allow other libraries to send the Guid
