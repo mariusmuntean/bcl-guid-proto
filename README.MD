@@ -7,6 +7,9 @@ A helper library that allows exchanging Protobuf-serialized GUIDs between a Node
 Basically the way that a .NET GUID is Protobuf-serialized is insane.The bytes of a GUID are produces with no recognizable endianness.
 On top of that, those 16 bytes are sent over the wire as an object with two properties, called `lo` and `hi`, each being a 64 bit long.
 
+Here's a graphical representation of how protobuf-net serializes a GUID
+![Mapping](./Media/Crazy%20Bytes.drawio.png)
+
 ## Solution
 
 Use the `toProtobufNetGuid` method to package your GUID string into the form of that aforementioned object.
